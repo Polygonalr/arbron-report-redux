@@ -1,0 +1,24 @@
+[
+	{
+		"hash": "testesthashtest",
+		"detected": false,
+		"translation": {
+			"original": "testesthashtest",
+			"md5": "lolcoalpa533"
+		}
+	},
+	{	"hash": "2ndhash",
+		"detected": false,
+		"translation": {
+			"original": "2ndhash",
+			"md5": ""
+		}
+	},
+	{	"hash": "detectable",
+		"detected": true,
+		"translation": {
+			"original": "detectable",
+			"md5": "detectable55"
+		}
+	}
+]
