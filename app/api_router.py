@@ -2,8 +2,8 @@
 api_router.py contains routes for API calls from arbron-frontend
 '''
 from flask import Blueprint, request, abort, send_file
-from report import generate_report_from_dict, generate_report_from_all
-from models import Report, update_database
+from app.report import generate_report_from_dict, generate_report_from_all
+from app.models import Report, update_database
 import os
 import shutil
 import tempfile

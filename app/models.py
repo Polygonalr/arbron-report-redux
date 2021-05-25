@@ -1,13 +1,13 @@
 '''
 models.py contains most of the code that interacts with the database backend.
 '''
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from dotenv import load_dotenv
 import os
 
+from app import db
+
 load_dotenv()
-db = SQLAlchemy()
 
 # Declaration of HashResult model to be used with SQLAlchemy
 class HashResult(db.Model):

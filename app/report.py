@@ -6,7 +6,7 @@ import uuid
 import shutil
 import tempfile
 import weakref
-from models import HashResult, Report
+from app.models import HashResult, Report
 
 # Low level function to generate xlsx from assessment dict
 def generate_report_from_dict(assessments, dirpath):
