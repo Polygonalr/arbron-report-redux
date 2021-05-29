@@ -14,8 +14,10 @@ db = SQLAlchemy(app)
 
 from app import models
 from app.api_router import api_blueprint
+from app.frontend_router import frontend_blueprint
 
 app.register_blueprint(api_blueprint)
+app.register_blueprint(frontend_blueprint)
 
 #if not os.path.isfile(db_file):
     #print("\nDatabase file {} not found! Terminating program.\n".format(db_file))

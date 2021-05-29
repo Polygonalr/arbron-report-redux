@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>VT Report - {{ report_name }}</title>
+    <meta name="description" content="Arbron Report Redux">
+    <meta name="author" content="Zhi Heng">
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        table td, table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        table tr:nth-child(even){background-color: #f2f2f2;}
+        table tr:hover {background-color: #ddd;}
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Showing hash searches saved under "{{ report_name }}"</h2>
+    <table>
+        <thead>
+            <th>Hash</th>
+            <th>Detected by Symantec</th>
+            <th>MD5 equivalent</th>
+        </thead>
+        <tbody>
+            {% for assessment in assessments %}
+            <tr>
+                <td>{{ assessment.hash }}</td>
+                {% if assessment.detected %}
+                <td>Yes</td>
+                {% else %}
+                <td>No</td>
+                {% endif %}
+                <td>{{ assessment.md5 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
