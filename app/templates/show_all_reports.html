@@ -1,0 +1,58 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>VT Reports</title>
+    <meta name="description" content="Arbron Report Redux">
+    <meta name="author" content="Zhi Heng">
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        table td, table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        table tr:nth-child(even){background-color: #f2f2f2;}
+        table tr:hover {background-color: #ddd;}
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Showing all stored reports</h2>
+    <table>
+        <thead>
+            <th>Name</th>
+            <th>Date/Time Created</th>
+        </thead>
+        <tbody>
+            {% for report in report_items %}
+            <tr>
+		    <td><a href="/app/report/{{ report.name }}">{{ report.name }}</a></td>
+		<td>{{ report.creation_datetime }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <span>
+	{% if page_no > 1 %}
+	<a href="/app/report?page={{ page_no - 1 }}">&lt; Prev</a>
+	{% endif %}
+	Page {{page_no}} of {{max_page}}
+	{% if page_no < max_page %}
+	<a href="/app/report?page={{ page_no + 1 }}">&gt; Next</a>
+	{% endif %}
+    </span> 
+    <p>Total {{ total }} report(s).</p>
+    <a href="/all-report"><button>Generate consolidated report of ALL reports</button></a>
+</body>
+</html>
