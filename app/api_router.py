@@ -41,7 +41,7 @@ def PutReport(report_name="unspecified"):
     if not request.is_json:
         abort(500)
     assessments = request.get_json()
-    assessments = map(simplify_dict, assessments)
+    assessments = list(map(simplify_dict, assessments))
     # Check whether there are any same reports stored in db
     # Store the report in the db if not
     update_database(assessments, report_name)
