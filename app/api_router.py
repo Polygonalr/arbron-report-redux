@@ -47,6 +47,7 @@ def PutReport(report_name="unspecified"):
     update_database(assessments, report_name)
     # Create a temp directory and generate the xlsx report in it
     tempdir = tempfile.mkdtemp()
+    # Generate the xlsx file, send it and then cleanup
     generated_report_file_path = generate_report_from_dict(assessments,tempdir)
     resp = send_file(generated_report_file_path)
     file_remover.cleanup_once_done(resp, tempdir)
@@ -57,7 +58,18 @@ def PutReport(report_name="unspecified"):
 def GetXlsxReport(report_name="unspecified"):
     # Create a temp directory and generate the xlsx report in it
     tempdir = tempfile.mkdtemp()
-    generated_report_file_path = generate_report_from_dict(report_name,tempdir)
+    # Check whether report exists, 404 if not.
+    report = Report.query.filter_by(name=report_name).first()
+    if report == None:
+        abort(404)
+    hash_results = report.hash_results
+    # Have to convert all the objects to dict to be used in the report generation function
+    assessments = []
+    for hash_result in hash_results:
+        assessment = hash_result.__dict__
+        assessments.append(assessment)
+    # Generate the xlsx file, send it and then cleanup
+    generated_report_file_path = generate_report_from_dict(assessments,tempdir)
     resp = send_file(generated_report_file_path)
     file_remover.cleanup_once_done(resp, tempdir)
     return resp
