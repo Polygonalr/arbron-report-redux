@@ -1,0 +1,24 @@
+[
+	{
+		"hash": "69157bbd0ee1356a0fa2d7f60e87e5d4",
+		"detected": true,
+		"translation": {
+			"original": "69157bbd0ee1356a0fa2d7f60e87e5d4",
+			"md5": "69157bbd0ee1356a0fa2d7f60e87e5d4"
+		}
+	},
+	{	"hash": "C844FA72BEF661287E0A3948768E162ACF84BB14",
+		"detected": false,
+		"translation": {
+			"original": "C844FA72BEF661287E0A3948768E162ACF84BB14",
+			"md5": ""
+		}
+	},
+	{	"hash": "D1C384AF4212D6A4C204B10E85C4DD8A9F2CE0A0",
+		"detected": true,
+		"translation": {
+			"original": "D1C384AF4212D6A4C204B10E85C4DD8A9F2CE0A0",
+			"md5": "5b9c481d9fa5fc59213216838f816683"
+		}
+	}
+]

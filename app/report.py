@@ -16,8 +16,14 @@ undetected_style = {
     "bg_color": "#ffc7ce",
     "font_name": "Consolas"
 }
+header_style = {
+    "bold": True
+}
+none_style = {
+    "italic": True
+}
 MD5_WIDTH = 36.43
-SHA1_WIDTH = 43.57
+SHA1_WIDTH = 45.71
 SHA256_WIDTH = 73.14
 
 
@@ -27,15 +33,17 @@ def generate_report_from_dict(assessments, dirpath):
     wb = xlsxwriter.Workbook(report_full_path)
     detected_format = wb.add_format(detected_style)
     undetected_format = wb.add_format(undetected_style)
+    header_format = wb.add_format(header_style)
     ws = wb.add_worksheet()
 
     # Writing of the table headings
-    ws.write(0,0,"Hash")
-    ws.write(0,1,"Detected")
-    ws.write(0,2,"MD5 Eqv")
+    ws.write(0,0,"Hash", header_format)
+    ws.write(0,1,"Detected", header_format)
+    ws.write(0,2,"MD5 Eqv", header_format)
+    ws.write(0,4,"MD5 to block", header_format)
 
-    # Writing of the data to table body
-    row, col = 1, 0
+    # Writing of the data to main table body
+    row, col, to_block_row = 1, 0, 1
     bool_string_translation = { True:"Yes", False:"No" }
     longest_hash_len = 0
     for assessment in assessments:
@@ -46,10 +54,26 @@ def generate_report_from_dict(assessments, dirpath):
         ws.write(row,col,assessment['hash'], cell_format)
         ws.write(row,col+1,bool_string_translation[assessment['detected']], cell_format)
         ws.write(row,col+2,assessment['md5'], cell_format)
+
+        # If assessment indicates undetectable, and md5 available, write to col 4
+        if not assessment['detected']:
+            if len(assessment['hash']) == 32:
+                ws.write(to_block_row, 4, assessment['hash'], undetected_format)
+                to_block_row += 1
+            elif assessment['md5'] != "":
+                ws.write(to_block_row, 4, assessment['md5'], undetected_format)
+                to_block_row += 1
+        
+        # Update longest_hash_len to be used for setting col width
         if len(assessment['hash']) > longest_hash_len:
             longest_hash_len = len(assessment['hash'])
         row += 1
     
+    # If there are no hashes to block, indicate as such.
+    if to_block_row == 1:
+        none_format = wb.add_format(none_style)
+        ws.write(1, 4, "None", none_format)
+
     # Adjustment of column width
     if longest_hash_len <= 32: #md5
         ws.set_column(0, 0, MD5_WIDTH)
@@ -58,6 +82,7 @@ def generate_report_from_dict(assessments, dirpath):
     else:
         ws.set_column(0, 0, SHA256_WIDTH)
     ws.set_column(2, 2, MD5_WIDTH)
+    ws.set_column(4, 4, MD5_WIDTH)
     wb.close()
 
     return report_full_path
