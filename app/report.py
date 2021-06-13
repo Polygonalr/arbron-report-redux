@@ -3,6 +3,7 @@ import os
 import uuid
 import shutil
 import tempfile
+from datetime import timedelta
 from app.models import HashResult, Report
 
 # Declaration of styles to be used for formatting
@@ -104,27 +105,25 @@ def generate_report_from_all(dirpath):
 
     # Writing of the data to table body
     row, col = 1, 0
+    bool_string_translation = { True:"Yes", False:"No" }
     hashes = HashResult.query.all()
     for hash in hashes:
-        if hash['detected']:
+        if hash.detected:
             cell_format = detected_format
         else:
             cell_format = undetected_format
         ws.write(row,col,hash.hash, cell_format)
-        ws.write(row,col+1,hash.detected, cell_format)
+        ws.write(row,col+1,bool_string_translation[hash.detected], cell_format)
         ws.write(row,col+2,hash.md5, cell_format)
         ws.write(row,col+3,hash.report.name, cell_format)
-        ws.write(row,col+4,hash.report.creation_datetime, cell_format)
+        offset_time = hash.report.creation_datetime + timedelta(hours=8)
+        ws.write(row,col+4,offset_time.strftime("%Y-%m-%d %H:%M:%S"), cell_format)
         row += 1
     
-     # Adjustment of column width
-    if longest_hash_len <= 32: #md5
-        ws.set_column(0, 0, MD5_WIDTH)
-    elif longest_hash_len <= 40: #sha1
-        ws.set_column(0, 0, SHA1_WIDTH)
-    else:
-        ws.set_column(0, 0, SHA256_WIDTH)
+    # Adjustment of column width
+    ws.set_column(0, 0, SHA256_WIDTH)
     ws.set_column(2, 2, MD5_WIDTH)
+    ws.set_column(4, 4, 21.86)
     wb.close()
 
     return report_full_path
