@@ -15,7 +15,6 @@ class HashResult(db.Model):
     detected = db.Column(db.Boolean, nullable=False)
     md5 = db.Column(db.String(32), nullable=True)
     report_id = db.Column(db.Integer, db.ForeignKey("report.id"), nullable=False)
-    # report = db.relationship("Report", backref=db.backref('hash_result', lazy=True))
 
     def save(self):
         if self.hash == None:
@@ -50,10 +49,12 @@ class Report(db.Model):
 #   (i.e. the Report object contains no HashResults as the HashResults within assessments parameter already exists under another Report within the database)
 # Returns Report object otherwise
 def update_database(assessments: dict, report_name: str):
+    # Check whether report with provided report_name exists, create if not
     report = Report.query.filter_by(name=report_name).first()
     if report == None:
         report = Report(name=report_name)
         report.save()
+
     for assessment in assessments:
         # for each hash, check whether exists already
         same_hash = HashResult.query.filter_by(hash=assessment['hash'])
@@ -66,6 +67,7 @@ def update_database(assessments: dict, report_name: str):
             )
             db.session.add(new_hash_result)
     db.session.commit()
+
     # Reload the report object (not too sure whether needed?)
     report = Report.query.filter_by(name=report_name).first()
     if(len(report.hash_results) == 0):

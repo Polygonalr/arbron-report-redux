@@ -42,11 +42,13 @@ def PutReport(report_name="unspecified"):
         abort(500)
     assessments = request.get_json()
     assessments = list(map(simplify_dict, assessments))
-    # Check whether there are any same reports stored in db
-    # Store the report in the db if not
+
+    # Store the report in the db
     update_database(assessments, report_name)
+
     # Create a temp directory and generate the xlsx report in it
     tempdir = tempfile.mkdtemp()
+
     # Generate the xlsx file, send it and then cleanup
     generated_report_file_path = generate_report_from_dict(assessments,tempdir)
     resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=report_name+".xlsx")
@@ -58,16 +60,19 @@ def PutReport(report_name="unspecified"):
 def GetXlsxReport(report_name="unspecified"):
     # Create a temp directory and generate the xlsx report in it
     tempdir = tempfile.mkdtemp()
+
     # Check whether report exists, 404 if not.
     report = Report.query.filter_by(name=report_name).first()
     if report == None:
         abort(404)
     hash_results = report.hash_results
-    # Have to convert all the objects to dict to be used in the report generation function
+
+    # Convert all the objects to dict to be used in the report generation function
     assessments = []
     for hash_result in hash_results:
         assessment = hash_result.__dict__
         assessments.append(assessment)
+    
     # Generate the xlsx file, send it and then cleanup
     generated_report_file_path = generate_report_from_dict(assessments,tempdir)
     resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=report_name+".xlsx")

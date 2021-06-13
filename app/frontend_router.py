@@ -9,10 +9,12 @@ frontend_blueprint = Blueprint('frontend_router', __name__)
 
 @frontend_blueprint.route("/")
 def index():
+    # Redirect root url to ShowAllReports route
     return redirect(url_for("frontend_router.ShowAllReports"))
 
 @frontend_blueprint.route("/app/report", methods=['GET'])
 def ShowAllReports():
+    # Doing pagination based on 'page' get param
     page_no = request.args.get('page')
     if page_no == None:
         page_no = 1

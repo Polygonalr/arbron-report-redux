@@ -16,6 +16,7 @@ from app import models
 from app.api_router import api_blueprint
 from app.frontend_router import frontend_blueprint
 
+# Registration of blueprints which stores routes from the other files
 app.register_blueprint(api_blueprint)
 app.register_blueprint(frontend_blueprint)
 

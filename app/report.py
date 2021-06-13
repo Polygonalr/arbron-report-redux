@@ -1,5 +1,3 @@
-#TODO Formating of report (colors, column widths)
-
 import xlsxwriter
 import os
 import uuid
@@ -30,10 +28,12 @@ def generate_report_from_dict(assessments, dirpath):
     detected_format = wb.add_format(detected_style)
     undetected_format = wb.add_format(undetected_style)
     ws = wb.add_worksheet()
+
     # Writing of the table headings
     ws.write(0,0,"Hash")
     ws.write(0,1,"Detected")
     ws.write(0,2,"MD5 Eqv")
+
     # Writing of the data to table body
     row, col = 1, 0
     bool_string_translation = { True:"Yes", False:"No" }
@@ -49,6 +49,7 @@ def generate_report_from_dict(assessments, dirpath):
         if len(assessment['hash']) > longest_hash_len:
             longest_hash_len = len(assessment['hash'])
         row += 1
+    
     # Adjustment of column width
     if longest_hash_len <= 32: #md5
         ws.set_column(0, 0, MD5_WIDTH)
@@ -58,6 +59,7 @@ def generate_report_from_dict(assessments, dirpath):
         ws.set_column(0, 0, SHA256_WIDTH)
     ws.set_column(2, 2, MD5_WIDTH)
     wb.close()
+
     return report_full_path
 
 # Low level function to generate xlsx from all the hashes within the database
@@ -67,12 +69,14 @@ def generate_report_from_all(dirpath):
     detected_format = wb.add_format(detected_style)
     undetected_format = wb.add_format(undetected_style)
     ws = wb.add_worksheet()
+
     # Writing of the table headings
     ws.write(0,0,"Hash")
     ws.write(0,1,"Detected")
     ws.write(0,2,"MD5 Eqv")
     ws.write(0,3,"Report Name")
     ws.write(0,4,"Datetime")
+
     # Writing of the data to table body
     row, col = 1, 0
     hashes = HashResult.query.all()
@@ -87,6 +91,7 @@ def generate_report_from_all(dirpath):
         ws.write(row,col+3,hash.report.name, cell_format)
         ws.write(row,col+4,hash.report.creation_datetime, cell_format)
         row += 1
+    
      # Adjustment of column width
     if longest_hash_len <= 32: #md5
         ws.set_column(0, 0, MD5_WIDTH)
@@ -96,4 +101,5 @@ def generate_report_from_all(dirpath):
         ws.set_column(0, 0, SHA256_WIDTH)
     ws.set_column(2, 2, MD5_WIDTH)
     wb.close()
+
     return report_full_path
