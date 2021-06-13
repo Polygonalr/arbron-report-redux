@@ -1,24 +1,24 @@
 [
 	{
-		"hash": "testesthashtest",
+		"hash": "7815696ecbf1c96e6894b779456d330e",
 		"detected": false,
 		"translation": {
-			"original": "testesthashtest",
-			"md5": "lolcoalpa533"
+			"original": "7815696ecbf1c96e6894b779456d330e",
+			"md5": "7815696ecbf1c96e6894b779456d330e"
 		}
 	},
-	{	"hash": "2ndhash",
+	{	"hash": "bcb9609ee9ccef7752d74e207c19f6b19ab4e3ba",
 		"detected": false,
 		"translation": {
-			"original": "2ndhash",
+			"original": "bcb9609ee9ccef7752d74e207c19f6b19ab4e3ba",
 			"md5": ""
 		}
 	},
-	{	"hash": "detectable",
+	{	"hash": "136169a3bca2e745d6614eb9ad461c0c4b53abacd9b5ee22256735720a9f7ab9",
 		"detected": true,
 		"translation": {
-			"original": "detectable",
-			"md5": "detectable55"
+			"original": "136169a3bca2e745d6614eb9ad461c0c4b53abacd9b5ee22256735720a9f7ab9",
+			"md5": "926589441c165121dd3b8334edac6433"
 		}
 	}
 ]
