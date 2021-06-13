@@ -8,6 +8,7 @@ import os
 import shutil
 import tempfile
 import weakref
+import re
 
 api_blueprint = Blueprint('api_router', __name__)
 
@@ -34,6 +35,10 @@ def simplify_dict(assessment):
     del assessment['translation']
     return assessment
 
+# Replaces invalid characters for Windows filename with '-'
+def clean_xlsx_file_name(report_name):
+    return re.sub(r'[<>:"/\|?*]', '-', report_name) + ".xlsx"
+
 # Handles upload of hash assessments
 # Updates the database based on report_name, then generates and sends the Xlsx report
 @api_blueprint.route('/report/<report_name>', methods=['PUT'])
@@ -51,7 +56,8 @@ def PutReport(report_name="unspecified"):
 
     # Generate the xlsx file, send it and then cleanup
     generated_report_file_path = generate_report_from_dict(assessments,tempdir)
-    resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=report_name+".xlsx")
+    xlsx_file_name = re.sub(r'[<>:"/\|?*]', '-', report_name) + ".xlsx"
+    resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=clean_xlsx_file_name(report_name))
     file_remover.cleanup_once_done(resp, tempdir)
     return resp
 
@@ -75,7 +81,7 @@ def GetXlsxReport(report_name="unspecified"):
     
     # Generate the xlsx file, send it and then cleanup
     generated_report_file_path = generate_report_from_dict(assessments,tempdir)
-    resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=report_name+".xlsx")
+    resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=clean_xlsx_file_name(report_name))
     file_remover.cleanup_once_done(resp, tempdir)
     return resp
 
