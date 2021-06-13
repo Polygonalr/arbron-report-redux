@@ -8,6 +8,10 @@
     <meta name="description" content="Arbron Report Redux">
     <meta name="author" content="Zhi Heng">
     <style>
+        /* Horrible quick styling */
+        body {
+            font-family: sans-serif;
+        }
         table {
             border-collapse: collapse;
         }
@@ -43,7 +47,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <span>
+    <div style="margin-top:10px">
 	{% if page_no > 1 %}
 	<a href="/app/report?page={{ page_no - 1 }}">&lt; Prev</a>
 	{% endif %}

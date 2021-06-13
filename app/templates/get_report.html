@@ -8,6 +8,10 @@
     <meta name="description" content="Arbron Report Redux">
     <meta name="author" content="Zhi Heng">
     <style>
+        /* Horrible quick styling */
+        body {
+            font-family: sans-serif;
+        }
         table {
             border-collapse: collapse;
         }
@@ -23,6 +27,9 @@
             text-align: left;
             background-color: #04AA6D;
             color: white;
+        }
+        table td {
+            font-family: "Consolas";
         }
     </style>
 </head>
@@ -49,6 +56,6 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="/report/{{ report_name }}"><button>Download report</button></a>
+    <a href="/report/{{ report_name }}"><button style="margin-top:10px">Download report</button></a>
 </body>
 </html>
