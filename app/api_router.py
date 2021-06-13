@@ -49,7 +49,7 @@ def PutReport(report_name="unspecified"):
     tempdir = tempfile.mkdtemp()
     # Generate the xlsx file, send it and then cleanup
     generated_report_file_path = generate_report_from_dict(assessments,tempdir)
-    resp = send_file(generated_report_file_path)
+    resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=report_name+".xlsx")
     file_remover.cleanup_once_done(resp, tempdir)
     return resp
 
@@ -70,7 +70,7 @@ def GetXlsxReport(report_name="unspecified"):
         assessments.append(assessment)
     # Generate the xlsx file, send it and then cleanup
     generated_report_file_path = generate_report_from_dict(assessments,tempdir)
-    resp = send_file(generated_report_file_path)
+    resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename=report_name+".xlsx")
     file_remover.cleanup_once_done(resp, tempdir)
     return resp
 
@@ -80,6 +80,6 @@ def CollateAllXlsxReports():
     # Create a temp directory to generate the xlsx report
     tempdir = tempfile.mkdtemp()
     generated_report_file_path = generate_report_from_all(tempdir)
-    resp = send_file(generated_report_file_path)
+    resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename="all-report.xlsx")
     file_remover.cleanup_once_done(resp, tempdir)
     return resp
