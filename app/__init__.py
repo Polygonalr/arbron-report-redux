@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -11,6 +12,7 @@ db_file = os.getenv("SQLALCHEMY_DATABASE_FILENAME")
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + db_file
 db = SQLAlchemy(app)
+cors = CORS(app)
 
 from app import models
 from app.api_router import api_blueprint
