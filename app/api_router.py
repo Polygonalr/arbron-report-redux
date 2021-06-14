@@ -31,7 +31,10 @@ file_remover = FileRemover()
 
 # Removes redundant fields within the assessment dict
 def simplify_dict(assessment):
-    assessment['md5'] = assessment['translation']['md5']
+    if assessment['translation'] == None:
+        assessment['md5'] = ""
+    else:
+        assessment['md5'] = assessment['translation']['md5']
     del assessment['translation']
     return assessment
 
