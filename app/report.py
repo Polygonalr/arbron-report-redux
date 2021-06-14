@@ -30,6 +30,7 @@ SHA256_WIDTH = 73.14
 
 # Low level function to generate xlsx from assessment dict
 def generate_report_from_dict(assessments, dirpath):
+    assessments.sort(key=lambda x: len(x['hash']))
     report_full_path = dirpath + "/{}.xlsx".format(uuid.uuid4().hex)
     wb = xlsxwriter.Workbook(report_full_path)
     detected_format = wb.add_format(detected_style)
@@ -44,9 +45,10 @@ def generate_report_from_dict(assessments, dirpath):
     ws.write(0,4,"MD5 to block", header_format)
 
     # Writing of the data to main table body
-    row, col, to_block_row = 1, 0, 1
+    row, col = 1, 0
     bool_string_translation = { True:"Yes", False:"No" }
     longest_hash_len = 0
+    to_block_list = []
     for assessment in assessments:
         if assessment['detected']:
             cell_format = detected_format
@@ -56,22 +58,26 @@ def generate_report_from_dict(assessments, dirpath):
         ws.write(row,col+1,bool_string_translation[assessment['detected']], cell_format)
         ws.write(row,col+2,assessment['md5'], cell_format)
 
-        # If assessment indicates undetectable, and md5 available, write to col 4
+        # If assessment indicates undetectable and md5 is available, add it to to_block_list
         if not assessment['detected']:
-            if len(assessment['hash']) == 32:
-                ws.write(to_block_row, 4, assessment['hash'], undetected_format)
-                to_block_row += 1
-            elif assessment['md5'] != "":
-                ws.write(to_block_row, 4, assessment['md5'], undetected_format)
-                to_block_row += 1
+            if len(assessment['hash']) == 32 and assessment['hash'] not in to_block_list:
+                to_block_list.append(assessment['hash'])
+            elif assessment['md5'] != "" and assessment['md5'] not in to_block_list:
+                to_block_list.append(assessment['md5'])
         
         # Update longest_hash_len to be used for setting col width
         if len(assessment['hash']) > longest_hash_len:
             longest_hash_len = len(assessment['hash'])
         row += 1
+
+    # Writing hashes to block to col 4
+    row = 1
+    for hash_to_block in to_block_list:
+        ws.write(row, 4, hash_to_block, undetected_format)
+        row += 1
     
     # If there are no hashes to block, indicate as such.
-    if to_block_row == 1:
+    if row == 1:
         none_format = wb.add_format(none_style)
         ws.write(1, 4, "None", none_format)
 
