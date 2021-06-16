@@ -62,7 +62,8 @@ def generate_report_from_dict(assessments, dirpath):
         if not assessment['detected']:
             if len(assessment['hash']) == 32 and assessment['hash'] not in to_block_list:
                 to_block_list.append(assessment['hash'])
-            elif assessment['md5'] != "" and assessment['md5'] not in to_block_list:
+            elif not (assessment['md5'] == "" or assessment['md5'] == None)\
+                and assessment['md5'] not in to_block_list:
                 to_block_list.append(assessment['md5'])
         
         # Update longest_hash_len to be used for setting col width
