@@ -1,7 +1,7 @@
 '''
 api_router.py contains routes for API calls from arbron-frontend
 '''
-from flask import Blueprint, request, abort, send_file
+from flask import Blueprint, request, abort, send_file, jsonify
 from app.report import generate_report_from_dict, generate_report_from_all
 from app.models import Report, update_database
 import os
@@ -52,7 +52,7 @@ def PutReport(report_name="unspecified"):
     assessments = list(map(simplify_dict, assessments))
 
     # Store the report in the db
-    update_database(assessments, report_name)
+    update_database(assessments=assessments, report_name=report_name)
 
     # Create a temp directory and generate the xlsx report in it
     tempdir = tempfile.mkdtemp()
@@ -97,3 +97,16 @@ def CollateAllXlsxReports():
     resp = send_file(generated_report_file_path, as_attachment=True, attachment_filename="all-report.xlsx")
     file_remover.cleanup_once_done(resp, tempdir)
     return resp
+
+@api_blueprint.route('/migrate-json', methods=['POST'])
+def MigrateJson():
+    if not request.is_json:
+        abort(500)
+    report_list = request.get_json()
+    for report in report_list:
+        update_database(
+            assessments=report['assessments'],
+            report_name=report['report_name'],
+            report_datetime=report['report_datetime']
+        )
+    return jsonify(success=True)

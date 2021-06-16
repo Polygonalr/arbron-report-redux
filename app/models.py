@@ -2,6 +2,7 @@
 models.py contains most of the code that interacts with the database backend.
 '''
 from datetime import datetime
+from pytz import timezone
 from dotenv import load_dotenv
 import os
 
@@ -44,15 +45,19 @@ class Report(db.Model):
     def __repr__(self):
         return "<Report {}>".format(self.name)
 
-# Takes in assessments and report_name, stores new HashResults in database
+# Takes in assessments dict, report_name and (optional) report_datetime
+# Stores new HashResults in database
 # Returns None if the newly generated report does not contain any hashes
 #   (i.e. the Report object contains no HashResults as the HashResults within assessments parameter already exists under another Report within the database)
 # Returns Report object otherwise
-def update_database(assessments: dict, report_name: str):
+def update_database(assessments: dict, report_name: str, report_datetime: str = None):
     # Check whether report with provided report_name exists, create if not
     report = Report.query.filter_by(name=report_name).first()
     if report == None:
         report = Report(name=report_name)
+        if report_datetime != None:
+            utcdatetime = datetime.strptime(report_datetime, "%Y-%m-%d %H:%M:%S.%f%z")
+            report.creation_datetime = utcdatetime.astimezone(timezone("Asia/Singapore"))
         report.save()
 
     for assessment in assessments:
@@ -74,3 +79,4 @@ def update_database(assessments: dict, report_name: str):
         report.destroy()
         return None
     return report
+
